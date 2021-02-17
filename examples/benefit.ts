@@ -90,7 +90,7 @@ const configuration: BenefitConfigModel = {
 const benefit = new Benefit(configuration);
 
 // 設定排程定時拋送
-// benefit.setSchedule('*/10 * * * * *');
+benefit.setSchedule('*/10 * * * * *');
 
 // 直接拋送
 benefit.execute();

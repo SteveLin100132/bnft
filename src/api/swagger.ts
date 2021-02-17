@@ -55,6 +55,55 @@ export const SWAGGER_DOC = {
         },
       },
     },
+    '/specific/benefit/send': {
+      post: {
+        tags: ['benefit'],
+        summary: '重新上拋特定效益',
+        description: '重新上拋特定效益',
+        operationId: 'sendSpecificBenefit',
+        consumes: ['application/json'],
+        produces: ['application/json'],
+        parameters: [
+          {
+            name: 'systemId',
+            in: 'query',
+            description: '系統ID',
+            required: true,
+            type: 'string',
+          },
+          {
+            name: 'typeId',
+            in: 'query',
+            description: '效益ID',
+            required: true,
+            type: 'string',
+          },
+          {
+            name: 'timestamp',
+            in: 'query',
+            description: '重新上拋的時間',
+            required: true,
+            type: 'number',
+          },
+        ],
+        responses: {
+          200: {
+            description: 'successful operation',
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  $ref: '#/components/schemas/BenefitPayload',
+                },
+              },
+            },
+          },
+          400: {
+            description: 'Invalid status value',
+          },
+        },
+      },
+    },
     '/benefit/send/timestamps': {
       post: {
         tags: ['benefit'],
@@ -63,6 +112,61 @@ export const SWAGGER_DOC = {
         operationId: 'sendBenefitByTimeGroup',
         consumes: ['application/json'],
         produces: ['application/json'],
+        requestBody: {
+          content: {
+            'application/json': {
+              schema: {
+                type: 'array',
+                items: {
+                  type: 'number',
+                },
+                example: [1609430400000, 1609516800000],
+              },
+            },
+          },
+        },
+        responses: {
+          200: {
+            description: 'successful operation',
+            content: {
+              'application/json': {
+                schema: {
+                  type: 'object',
+                  $ref: '#/components/schemas/BenefitPayload',
+                },
+              },
+            },
+          },
+          400: {
+            description: 'Invalid status value',
+          },
+        },
+      },
+    },
+    '/specific/benefit/send/timestamps': {
+      post: {
+        tags: ['benefit'],
+        summary: '重新上拋特定時間區間內的特定效益',
+        description: '重新上拋特定時間區間內的特定效益',
+        operationId: 'sendSpecificBenefitByTimeGroup',
+        consumes: ['application/json'],
+        produces: ['application/json'],
+        parameters: [
+          {
+            name: 'systemId',
+            in: 'query',
+            description: '系統ID',
+            required: true,
+            type: 'string',
+          },
+          {
+            name: 'typeId',
+            in: 'query',
+            description: '效益ID',
+            required: true,
+            type: 'string',
+          },
+        ],
         requestBody: {
           content: {
             'application/json': {

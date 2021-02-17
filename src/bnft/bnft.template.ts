@@ -48,7 +48,7 @@ export abstract class BnftTemplate {
   /**
    * API服務器
    */
-  private apiServer = new Server(this).start();
+  private apiServer = Server.instance.register(this);
   /**
    * HTTP請求
    */
