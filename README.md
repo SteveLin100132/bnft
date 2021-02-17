@@ -95,7 +95,7 @@ benefit.setSchedule('*/10 * * * * *');
 benefit.execute();
 ```
 
-[Full Example](https://github.com/SteveLin100132/wisrtoni40-bnft/blob/master/examples/benefit.ts)
+[Full Example](https://github.com/SteveLin100132/wistroni40-bnft/blob/master/examples/benefit.ts)
 
 # Feature
 
