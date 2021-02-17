@@ -265,6 +265,18 @@ curl -X POST "http://localhost:3000/benefit/send?timestamp=1609430400000" -H  "a
 |:-----:|:-----:|:-----:|:-----:|:-----|
 | timestamp | query: number | Required | ```undefined``` | 重新上拋的時間 |
 
+## 重新上拋特定效益
+
+```
+curl -X POST "http://localhost:3000/specific/benefit/send?systemId=mytest&typeId=cost_idl2&timestamp=1609430400000" -H  "accept: application/json"
+```
+
+| Paramter | Type | Required | Default | Description
+|:-----:|:-----:|:-----:|:-----:|:-----|
+| systemId | query: string | Required | ```undefined``` | 系統ID |
+| typeId | query: string | Required | ```undefined``` | 效益ID |
+| timestamp | query: number | Required | ```undefined``` | 重新上拋的時間 |
+
 ## 重新上拋特定時間區間內的所有效益
 
 ```
@@ -273,6 +285,18 @@ curl -X POST "http://localhost:3000/benefit/send/timestamps" -H  "accept: applic
 
 | Paramter | Type | Required | Default | Description
 |:-----:|:-----:|:-----:|:-----:|:-----|
+| body | number[] | Required | ```undefined``` | 重新上拋的時間區間 |
+
+## 重新上拋特定時間區間內的特定效益
+
+```
+curl -X POST "http://localhost:3000/specific/benefit/send/timestamps?systemId=mytest&typeId=cost_idl2" -H  "accept: application/json" -H  "Content-Type: application/json" -d "[1609430400000]"
+```
+
+| Paramter | Type | Required | Default | Description
+|:-----:|:-----:|:-----:|:-----:|:-----|
+| systemId | query: string | Required | ```undefined``` | 系統ID |
+| typeId | query: string | Required | ```undefined``` | 效益ID |
 | body | number[] | Required | ```undefined``` | 重新上拋的時間區間 |
 
 ## 重拋上拋失敗的效益
