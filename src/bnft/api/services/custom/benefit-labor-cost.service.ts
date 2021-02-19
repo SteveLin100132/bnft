@@ -13,11 +13,12 @@ import { Observable } from 'rxjs';
 import { HttpAdapter, HttpResponse } from '../../../../http';
 import { ApiConfig } from '../../api.config';
 import { BenefitLatestLaborCostResponse } from '../../models';
+import { BenefitLaborCost } from '../core';
 
 /**
  * 效益DL及IDL人員工時服務
  */
-export class BenefitLaborCostService {
+export class BenefitLaborCostService implements BenefitLaborCost {
   /**
    * @param http HTTP請求轉接器
    */

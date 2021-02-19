@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## 1.0.2 - 2021-02-19
+
+### Fixed
+
+#### Resend Benefit API
+
+- 效益背景API實現單例操作，避免多個效益服務產生多個後台API
+
+#### Dependencies
+
+- 將```swagger-jsdoc```, ```swagger-ui-express```加到```package.json```
+
 ## 1.0.1 - 2021-02-17
 
 ### Added

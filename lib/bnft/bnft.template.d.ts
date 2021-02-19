@@ -48,6 +48,13 @@ export declare abstract class BnftTemplate {
      */
     constructor(config: BenefitConfigModel);
     /**
+     * 取得預設的效益參數資料
+     *
+     * @method private
+     * @return 回傳預設的效益參數資料
+     */
+    private getDefaultProcucePayload;
+    /**
      * 建構效益參數實體
      *
      * @method protected

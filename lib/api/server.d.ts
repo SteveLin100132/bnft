@@ -8,12 +8,12 @@
  * -----------------------------------------------------------------------------
  * @NOTE
  */
+import * as express from 'express';
 import { BnftTemplate } from 'src/bnft';
 /**
  * API服務器
  */
 export declare class Server {
-    private benefit;
     /**
      * 日誌
      */
@@ -23,9 +23,29 @@ export declare class Server {
      */
     private readonly server;
     /**
-     * @param benefit 效益計算Job
+     * 效益計算Job
      */
-    constructor(benefit: BnftTemplate);
+    private benefit;
+    /**
+     * 單一實例
+     */
+    static instance: Server;
+    private constructor();
+    /**
+     * 取得效益計算Job清單
+     *
+     * @method private
+     * @return 回傳效益計算Job清單
+     */
+    private getBenefitList;
+    /**
+     * 取得效益Key名稱
+     *
+     * @method private
+     * @param req 請求
+     * @return 回傳效益Key名稱
+     */
+    private getBenefitKey;
     /**
      * 重新上拋所有效益
      *
@@ -35,6 +55,14 @@ export declare class Server {
      */
     private sendBenefit;
     /**
+     * 重新上拋特定效益
+     *
+     * @method private
+     * @param req 請求
+     * @param res 回應
+     */
+    private sendSpecificBenefit;
+    /**
      * 重新上拋特定時間區間內的所有效益
      *
      * @method private
@@ -42,6 +70,14 @@ export declare class Server {
      * @param res 會應
      */
     private sendBenefitByTimeGroup;
+    /**
+     * 重新上拋特定時間區間內的特定效益
+     *
+     * @method private
+     * @param req 請求
+     * @param res 會應
+     */
+    sendSpecificBenefitByTimeGroup(req: express.Request, res: express.Response): Promise<void>;
     /**
      * 重拋上拋失敗的效益
      *
@@ -53,9 +89,15 @@ export declare class Server {
     /**
      * 啟動API Server
      *
-     * @method public
-     * @param port API端口
+     * @method private
      * @return 回傳物件本身
      */
-    start(port?: number): Server;
+    private start;
+    /**
+     * 註冊效益計算Job
+     *
+     * @method public
+     * @param benefit 效益計算Job
+     */
+    register(benefit: BnftTemplate): void;
 }

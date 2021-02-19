@@ -1,26 +1,20 @@
 /**
  * 專案名稱： @wistroni40/bnft
  * 部門代號： ML8100
- * 檔案說明： 效益DL及IDL人員工時服務
- * @CREATE Mon Feb 08 2021 上午8:36:35
+ * 檔案說明： 抽象效益DL及IDL人員工時
+ * @CREATE Thu Feb 18 2021 下午4:25:03
  * @author Steve Y Lin
  * @contact Steve_Y_Lin@wistron.com #1342
  * -----------------------------------------------------------------------------
  * @NOTE
  */
 import { Observable } from 'rxjs';
-import { HttpAdapter, HttpResponse } from '../../../../http';
 import { BenefitLatestLaborCostResponse } from '../../models';
-import { BenefitLaborCost } from '../core';
+import { HttpResponse } from './../../../../http';
 /**
- * 效益DL及IDL人員工時服務
+ * 抽象效益DL及IDL人員工時
  */
-export declare class BenefitLaborCostService implements BenefitLaborCost {
-    protected http: HttpAdapter;
-    /**
-     * @param http HTTP請求轉接器
-     */
-    constructor(http: HttpAdapter);
+export interface BenefitLaborCost {
     /**
      * 取得最新的IDL或ID人員工時
      *

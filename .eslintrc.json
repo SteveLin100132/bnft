@@ -18,6 +18,7 @@
         "semi": "off",
         "no-useless-constructor": "off",
         "camelcase": "warn",
+        "indent": "off",
         "space-before-function-paren": [
             "error",
             {

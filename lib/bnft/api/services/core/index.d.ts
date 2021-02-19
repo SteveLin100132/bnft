@@ -9,3 +9,4 @@
  * @NOTE
  */
 export * from './base-api';
+export * from './benefit-labor-cost';

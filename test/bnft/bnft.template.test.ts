@@ -38,39 +38,6 @@ describe('BnftTemplate', () => {
   });
 
   /**
-   * 測試取得效益參數
-   */
-  it(`getBenefitParams: get benefit paramters`, async () => {
-    // Arrange
-    const site = 'WKS';
-    const company = 'WSD';
-    const plant = 'WKS-P5';
-    const plantCode = 'F232';
-    const start = new Date();
-    const end = new Date();
-    const condition: BenefitQueryModel = {
-      site,
-      company,
-      plant,
-      plantCode,
-      start,
-      end,
-    };
-    const expect: Bnft.Param[] = [BNFT_PARAM1];
-
-    sinon
-      .stub(bnft, 'getBenefitParams')
-      .withArgs(condition)
-      .returns(Promise.resolve(expect));
-
-    // Act
-    const result = await bnft.getBenefitParams(condition);
-
-    // Assert
-    should(result).containDeep(expect);
-  });
-
-  /**
    * 測試建構效益參數資料
    */
   it(`buildPayload: get benefit saving data`, () => {
@@ -110,5 +77,38 @@ describe('BnftTemplate', () => {
 
     // Assert
     result.subscribe((benefit) => should(benefit).containDeep(expect));
+  });
+
+  /**
+   * 測試取得效益參數
+   */
+  it(`getBenefitParams: get benefit paramters`, async () => {
+    // Arrange
+    const site = 'WKS';
+    const company = 'WSD';
+    const plant = 'WKS-P5';
+    const plantCode = 'F232';
+    const start = new Date();
+    const end = new Date();
+    const condition: BenefitQueryModel = {
+      site,
+      company,
+      plant,
+      plantCode,
+      start,
+      end,
+    };
+    const expect: Bnft.Param[] = [BNFT_PARAM1];
+
+    sinon
+      .stub(bnft, 'getBenefitParams')
+      .withArgs(condition)
+      .returns(Promise.resolve(expect));
+
+    // Act
+    const result = await bnft.getBenefitParams(condition);
+
+    // Assert
+    should(result).containDeep(expect);
   });
 });

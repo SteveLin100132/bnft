@@ -51,6 +51,39 @@ export declare const SWAGGER_DOC: {
                 };
             };
         };
+        '/specific/benefit/send': {
+            post: {
+                tags: string[];
+                summary: string;
+                description: string;
+                operationId: string;
+                consumes: string[];
+                produces: string[];
+                parameters: {
+                    name: string;
+                    in: string;
+                    description: string;
+                    required: boolean;
+                    type: string;
+                }[];
+                responses: {
+                    200: {
+                        description: string;
+                        content: {
+                            'application/json': {
+                                schema: {
+                                    type: string;
+                                    $ref: string;
+                                };
+                            };
+                        };
+                    };
+                    400: {
+                        description: string;
+                    };
+                };
+            };
+        };
         '/benefit/send/timestamps': {
             post: {
                 tags: string[];
@@ -59,6 +92,52 @@ export declare const SWAGGER_DOC: {
                 operationId: string;
                 consumes: string[];
                 produces: string[];
+                requestBody: {
+                    content: {
+                        'application/json': {
+                            schema: {
+                                type: string;
+                                items: {
+                                    type: string;
+                                };
+                                example: number[];
+                            };
+                        };
+                    };
+                };
+                responses: {
+                    200: {
+                        description: string;
+                        content: {
+                            'application/json': {
+                                schema: {
+                                    type: string;
+                                    $ref: string;
+                                };
+                            };
+                        };
+                    };
+                    400: {
+                        description: string;
+                    };
+                };
+            };
+        };
+        '/specific/benefit/send/timestamps': {
+            post: {
+                tags: string[];
+                summary: string;
+                description: string;
+                operationId: string;
+                consumes: string[];
+                produces: string[];
+                parameters: {
+                    name: string;
+                    in: string;
+                    description: string;
+                    required: boolean;
+                    type: string;
+                }[];
                 requestBody: {
                     content: {
                         'application/json': {

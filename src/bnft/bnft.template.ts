@@ -80,6 +80,20 @@ export abstract class BnftTemplate {
   }
 
   /**
+   * 取得預設的效益參數資料
+   *
+   * @method private
+   * @return 回傳預設的效益參數資料
+   */
+  private getDefaultProcucePayload(): Observable<
+    ProducePayloadModel<Bnft.BenefitSaving>
+  > {
+    return of(
+      new ProducePayload(this.config.publishApi, new BenefitSavingEntity())
+    );
+  }
+
+  /**
    * 建構效益參數實體
    *
    * @method protected
@@ -225,7 +239,9 @@ export abstract class BnftTemplate {
       // 將效益參數打散成單筆數據
       concatAll(),
       // 打包成拋送的資料格式
-      map((benefit) => new ProducePayload(this.config.publishApi, benefit))
+      map((benefit) => new ProducePayload(this.config.publishApi, benefit)),
+      // 發生錯誤給定預設值
+      catchError(() => this.getDefaultProcucePayload())
     );
   }
 
