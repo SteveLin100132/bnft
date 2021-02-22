@@ -12,6 +12,7 @@
 import * as bodyParser from 'body-parser';
 import * as express from 'express';
 import * as fs from 'fs';
+import * as http from 'http';
 import { Bnft, BnftTemplate } from 'src/bnft';
 import { ProducePayloadModel } from 'src/retry';
 import * as swaggerUi from 'swagger-ui-express';
@@ -30,6 +31,10 @@ export class Server {
    * API Server
    */
   private readonly server = express();
+  /**
+   * API
+   */
+  private api?: http.Server;
   /**
    * 效益計算Job
    */
@@ -206,10 +211,10 @@ export class Server {
   /**
    * 啟動API Server
    *
-   * @method private
+   * @method public
    * @return 回傳物件本身
    */
-  private start(): Server {
+  public start(): Server {
     const port = 3000;
     this.server.use(bodyParser.json());
     this.server.post('/benefit/send', this.sendBenefit.bind(this));
@@ -228,7 +233,20 @@ export class Server {
     this.server.post('/benefit/backup', this.sendBackupBenefit.bind(this));
     this.server.use('/', swaggerUi.serve, swaggerUi.setup(SWAGGER_DOC));
     this.logger.info(`Listen api port ${port}`);
-    this.server.listen(port);
+    this.api = this.server.listen(port);
+    return this;
+  }
+
+  /**
+   * 終止API Server
+   *
+   * @method public
+   * @return 回傳物件本身
+   */
+  public stop(): Server {
+    if (this.api) {
+      this.api.close();
+    }
     return this;
   }
 
