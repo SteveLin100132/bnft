@@ -23,6 +23,10 @@ export declare class Server {
      */
     private readonly server;
     /**
+     * API
+     */
+    private api?;
+    /**
      * 效益計算Job
      */
     private benefit;
@@ -89,10 +93,17 @@ export declare class Server {
     /**
      * 啟動API Server
      *
-     * @method private
+     * @method public
      * @return 回傳物件本身
      */
-    private start;
+    start(): Server;
+    /**
+     * 終止API Server
+     *
+     * @method public
+     * @return 回傳物件本身
+     */
+    stop(): Server;
     /**
      * 註冊效益計算Job
      *
