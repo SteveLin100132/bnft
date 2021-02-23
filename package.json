@@ -1,7 +1,9 @@
 {
   "name": "wistroni40-bnft",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Benefit platform parameters publish job template",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/SteveLin100132/wistroni40-bnft.git"
