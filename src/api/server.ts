@@ -246,6 +246,7 @@ export class Server {
   public stop(): Server {
     if (this.api) {
       this.api.close();
+      this.logger.warn('api close');
     }
     return this;
   }

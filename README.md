@@ -175,6 +175,7 @@ Parameter | Type | Required | Default | Description
 Parameter | Type | Required | Default | Description
 |:-----|:-----:|:-----:|:-----:|:-----|
 | timestamp | Date | Optional | ```undefined``` | 查詢開始時間 |
+| sendable | boolean | Optional | true | 執行結果是否上拋 |
 | returns | Observable&lt;ProducePayloadModel&lt;Bnft.BenefitSaving&gt;&gt; | Required | ```undefined``` | 回傳效益參數上拋資料 |
 
 #### send
@@ -184,6 +185,7 @@ Parameter | Type | Required | Default | Description
 Parameter | Type | Required | Default | Description
 |:-----|:-----:|:-----:|:-----:|:-----|
 | payload | ProducePayloadModel&lt;Bnft.BenefitSaving&gt; | Required | ```undefined``` | 效益參數 |
+| sendable | boolean | Optional | true | 執行結果是否上拋 |
 
 #### findLatestLaborCost
 

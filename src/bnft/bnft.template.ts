@@ -16,6 +16,7 @@ import { catchError, concatAll, filter, map } from 'rxjs/operators';
 import { ProducerAdapter } from 'wistroni40-retry/lib';
 import { Server } from './../api';
 import { AxiosHttpService, HttpAdapter, HttpResponse } from './../http';
+import { Log4js } from './../logger';
 import {
   HttpProducer,
   ProducePayloadEntity as ProducePayload,
@@ -46,6 +47,10 @@ import {
  */
 export abstract class BnftTemplate {
   /**
+   * 日誌
+   */
+  private readonly console = new Log4js('bnft');
+  /**
    * API服務器
    */
   private apiServer = Server.instance.register(this);
@@ -69,6 +74,10 @@ export abstract class BnftTemplate {
    * 排程設定
    */
   protected cron: string | null = null;
+  /**
+   * 需要計算的廠別
+   */
+  protected abstract enabledPlant: string[];
 
   /**
    * @param config 效益設定檔
@@ -184,6 +193,22 @@ export abstract class BnftTemplate {
   }
 
   /**
+   * 過濾無須或異常的廠別
+   *
+   * @method public
+   * @param plant 廠別資料
+   * @return 回傳該廠別是否要保留
+   */
+  public filterPlant(plant?: PlantModel): boolean {
+    const isNotUndefined = plant !== undefined;
+    let isAllowedPlant = true;
+    if (plant && this.enabledPlant && this.enabledPlant.length > 0) {
+      isAllowedPlant = this.enabledPlant.includes(plant.plantcode);
+    }
+    return isNotUndefined && isAllowedPlant;
+  }
+
+  /**
    * 建構效益參數資料
    *
    * @method public
@@ -232,8 +257,8 @@ export abstract class BnftTemplate {
       map((plants) => from(plants)),
       // 將廠別打散成單筆數據
       concatAll(),
-      // 過濾掉undefined的數據
-      filter((plant) => plant !== undefined),
+      // 保留需要計算及無異常的廠別
+      filter((plant) => this.filterPlant(plant)),
       // 查詢效益參數
       map((plant) => this.queryBenefit(plant as PlantModel, timestamp)),
       // 將效益參數打散成單筆數據
@@ -250,15 +275,17 @@ export abstract class BnftTemplate {
    *
    * @method public
    * @param timestamp 查詢開始時間
+   * @param sendable  執行結果是否上拋
    * @return 回傳效益參數上拋資料
    */
   public execute(
-    timestamp?: Date
+    timestamp?: Date,
+    sendable = true
   ): Observable<ProducePayloadModel<Bnft.BenefitSaving>> {
     const query = this.buildQueryActivatedSystemsFilter();
     const system$ = this.activedSystemService.find<ActivedSystemModel>(query);
     const param$ = this.processBenefitParams(system$, timestamp);
-    param$.subscribe((payload) => this.send(payload));
+    param$.subscribe((payload) => this.send(payload, sendable));
     return param$;
   }
 
@@ -266,12 +293,18 @@ export abstract class BnftTemplate {
    * 將效益參數上拋
    *
    * @method public
-   * @param payload 效益參數
+   * @param payload  效益參數
+   * @param sendable 效益參數是否上拋
    */
   public async send(
-    payload: ProducePayloadModel<Bnft.BenefitSaving>
+    payload: ProducePayloadModel<Bnft.BenefitSaving>,
+    sendable = true
   ): Promise<void> {
-    this.producer.publish(payload);
+    if (sendable) {
+      this.producer.publish(payload);
+    } else {
+      this.console.debug(JSON.stringify(payload));
+    }
   }
 
   /**

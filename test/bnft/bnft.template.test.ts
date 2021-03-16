@@ -12,7 +12,8 @@
 /* eslint-disable */
 import * as should from 'should';
 import * as sinon from 'sinon';
-import { BenefitQueryModel, Bnft } from './../../src/bnft';
+import { Server } from '../../src/api';
+import { BenefitPlantEntity, BenefitQueryModel, Bnft } from './../../src/bnft';
 import {
   BnftMock,
   BNFT_CONF,
@@ -34,7 +35,36 @@ describe('BnftTemplate', () => {
    * 測試前準備
    */
   beforeEach(() => {
+    Server.instance.stop();
     bnft = new BnftMock(BNFT_CONF);
+  });
+
+  /**
+   * 測試過濾無須或異常的廠別，該廠別要計算
+   */
+  it(`filterPlant: filter plant that need to calculate`, () => {
+    // Arrange
+    const plant = new BenefitPlantEntity({ plantcode: 'F232' });
+
+    // Act
+    const result = bnft.filterPlant(plant);
+
+    // Assert
+    should(result).be.true();
+  });
+
+  /**
+   * 測試過濾無須或異常的廠別，該廠別無須計算
+   */
+  it(`filterPlant: filter plant that not need to calculate`, () => {
+    // Arrange
+    const plant = new BenefitPlantEntity({ plantcode: 'F237' });
+
+    // Act
+    const result = bnft.filterPlant(plant);
+
+    // Assert
+    should(result).be.false();
   });
 
   /**

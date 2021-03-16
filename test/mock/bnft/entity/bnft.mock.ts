@@ -21,6 +21,11 @@ import {
  */
 export class BnftMock extends BnftTemplate {
   /**
+   * 需要計算的廠別
+   */
+  protected enabledPlant: string[] = ['F232', 'F230'];
+
+  /**
    * @param config 效益設定檔
    */
   constructor(public config: BenefitConfigModel) {
