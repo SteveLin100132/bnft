@@ -16,6 +16,7 @@ import { Server } from '../../src/api';
 import { BenefitPlantEntity, BenefitQueryModel, Bnft } from './../../src/bnft';
 import {
   BnftMock,
+  BnftMockAllPlant,
   BNFT_CONF,
   BNFT_PARAM1,
   BNFT_PARAM2,
@@ -65,6 +66,21 @@ describe('BnftTemplate', () => {
 
     // Assert
     should(result).be.false();
+  });
+
+  /**
+   * 測試過濾無須或異常的廠別，所有廠別都要計算
+   */
+  it(`filterPlant: all plant need to calculate`, () => {
+    // Arrange
+    const benefit = new BnftMockAllPlant(BNFT_CONF);
+    const plant = new BenefitPlantEntity({ plantcode: 'F237' });
+
+    // Act
+    const result = benefit.filterPlant(plant);
+
+    // Assert
+    should(result).be.true();
   });
 
   /**

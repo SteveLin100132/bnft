@@ -9,4 +9,5 @@
  * @NOTE
  */
 
+export * from './bnft-all-plant.mock';
 export * from './bnft.mock';

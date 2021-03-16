@@ -27,6 +27,11 @@ import {
  */
 class Benefit extends BnftTemplate {
   /**
+   * 需要計算的廠別，若設為undefined則表示所有廠別都要計算
+   */
+  protected enabledPlant = ['plantA', 'plantB'];
+
+  /**
    * @param config 效益設定檔
    */
   constructor(public config: BenefitConfigModel) {

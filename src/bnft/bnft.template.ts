@@ -77,7 +77,7 @@ export abstract class BnftTemplate {
   /**
    * 需要計算的廠別
    */
-  protected abstract enabledPlant: string[];
+  protected abstract enabledPlant?: string[];
 
   /**
    * @param config 效益設定檔

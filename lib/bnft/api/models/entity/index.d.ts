@@ -10,3 +10,4 @@
  */
 export * from './benefit-actived-system.entity';
 export * from './benefit-latest-labor-cost.entity';
+export * from './benefit-plant.entity';

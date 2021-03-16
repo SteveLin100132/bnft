@@ -20,6 +20,10 @@ import { BenefitConfigModel, BenefitQueryModel, Bnft } from './models';
 export declare abstract class BnftTemplate {
     config: BenefitConfigModel;
     /**
+     * 日誌
+     */
+    private readonly console;
+    /**
      * API服務器
      */
     private apiServer;
@@ -43,6 +47,10 @@ export declare abstract class BnftTemplate {
      * 排程設定
      */
     protected cron: string | null;
+    /**
+     * 需要計算的廠別
+     */
+    protected abstract enabledPlant?: string[];
     /**
      * @param config 效益設定檔
      */
@@ -96,6 +104,14 @@ export declare abstract class BnftTemplate {
      */
     setSchedule(cron: string): BnftTemplate;
     /**
+     * 過濾無須或異常的廠別
+     *
+     * @method public
+     * @param plant 廠別資料
+     * @return 回傳該廠別是否要保留
+     */
+    filterPlant(plant?: PlantModel): boolean;
+    /**
      * 建構效益參數資料
      *
      * @method public
@@ -126,16 +142,18 @@ export declare abstract class BnftTemplate {
      *
      * @method public
      * @param timestamp 查詢開始時間
+     * @param sendable  執行結果是否上拋
      * @return 回傳效益參數上拋資料
      */
-    execute(timestamp?: Date): Observable<ProducePayloadModel<Bnft.BenefitSaving>>;
+    execute(timestamp?: Date, sendable?: boolean): Observable<ProducePayloadModel<Bnft.BenefitSaving>>;
     /**
      * 將效益參數上拋
      *
      * @method public
-     * @param payload 效益參數
+     * @param payload  效益參數
+     * @param sendable 效益參數是否上拋
      */
-    send(payload: ProducePayloadModel<Bnft.BenefitSaving>): Promise<void>;
+    send(payload: ProducePayloadModel<Bnft.BenefitSaving>, sendable?: boolean): Promise<void>;
     /**
      * 取得最新的IDL或ID人員工時
      *
