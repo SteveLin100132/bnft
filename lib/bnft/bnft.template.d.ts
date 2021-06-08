@@ -8,10 +8,9 @@
  * -----------------------------------------------------------------------------
  * @NOTE
  */
-import { Observable } from 'rxjs';
-import { ProducerAdapter } from 'wistroni40-retry/lib';
+import { Observable, Subject } from 'rxjs';
 import { HttpAdapter, HttpResponse } from './../http';
-import { ProducePayloadModel } from './../retry';
+import { HttpProducer, ProducePayloadModel } from './../retry';
 import { BaseModel as ApiBaseModel, BenefitActivedSystemModel as ActivedSystemModel, BenefitActivedSystemService, BenefitLaborCostService, BenefitLatestLaborCostResponse, BenefitPlantModel as PlantModel } from './api';
 import { BenefitConfigModel, BenefitQueryModel, Bnft } from './models';
 /**
@@ -34,7 +33,7 @@ export declare abstract class BnftTemplate {
     /**
      * HTTP拋送者
      */
-    protected producer: ProducerAdapter<HttpAdapter>;
+    protected producer: HttpProducer;
     /**
      * 效益激活系統服務
      */
@@ -51,6 +50,13 @@ export declare abstract class BnftTemplate {
      * 需要計算的廠別
      */
     protected abstract enabledPlant?: string[];
+    /**
+     * 送出數據完畢
+     */
+    sendCompleted: Subject<{
+        error: any;
+        result: any;
+    }>;
     /**
      * @param config 效益設定檔
      */

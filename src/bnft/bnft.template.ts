@@ -11,9 +11,8 @@
 
 import axios from 'axios';
 import * as schedule from 'node-schedule';
-import { from, Observable, of } from 'rxjs';
+import { from, Observable, of, Subject } from 'rxjs';
 import { catchError, concatAll, filter, map } from 'rxjs/operators';
-import { ProducerAdapter } from 'wistroni40-retry/lib';
 import { Server } from './../api';
 import { AxiosHttpService, HttpAdapter, HttpResponse } from './../http';
 import { Log4js } from './../logger';
@@ -61,7 +60,7 @@ export abstract class BnftTemplate {
   /**
    * HTTP拋送者
    */
-  protected producer: ProducerAdapter<HttpAdapter>;
+  protected producer: HttpProducer;
   /**
    * 效益激活系統服務
    */
@@ -78,6 +77,10 @@ export abstract class BnftTemplate {
    * 需要計算的廠別
    */
   protected abstract enabledPlant?: string[];
+  /**
+   * 送出數據完畢
+   */
+  public sendCompleted: Subject<{ error: any; result: any }>;
 
   /**
    * @param config 效益設定檔
@@ -86,6 +89,7 @@ export abstract class BnftTemplate {
     this.config = new BenefitConfigEntity(this.config);
     ApiConfig.path = this.config.benefitApi;
     this.producer = new HttpProducer(this.http, { count: this.config.retry });
+    this.sendCompleted = this.producer.sendCompleted;
   }
 
   /**
@@ -98,7 +102,7 @@ export abstract class BnftTemplate {
     ProducePayloadModel<Bnft.BenefitSaving>
   > {
     return of(
-      new ProducePayload(this.config.publishApi, new BenefitSavingEntity())
+      new ProducePayload(this.config.publishApi, new BenefitSavingEntity()),
     );
   }
 
@@ -113,7 +117,7 @@ export abstract class BnftTemplate {
   protected buildBenefitEntity(
     timestamp: Date,
     condition: BenefitQueryModel,
-    params: Bnft.Param[]
+    params: Bnft.Param[],
   ): Bnft.BenefitSaving {
     return new BenefitSavingEntity({
       evt_dt: timestamp.getTime(),
@@ -152,7 +156,7 @@ export abstract class BnftTemplate {
    */
   protected queryBenefit(
     plant: PlantModel,
-    timestamp?: Date
+    timestamp?: Date,
   ): Observable<Bnft.BenefitSaving> {
     const start = TimeManager.getStartTime(timestamp);
     const end = TimeManager.getEndTime(timestamp);
@@ -160,8 +164,7 @@ export abstract class BnftTemplate {
       .setStartTime(start)
       .setEndTime(end)
       .build();
-    const payload = this.buildPayload(start, condition);
-    return payload;
+    return this.buildPayload(start, condition);
   }
 
   /**
@@ -218,10 +221,10 @@ export abstract class BnftTemplate {
    */
   public buildPayload(
     timestamp: Date,
-    condition: BenefitQueryModel
+    condition: BenefitQueryModel,
   ): Observable<Bnft.BenefitSaving> {
     return from(this.getBenefitParams(condition)).pipe(
-      map((params) => this.buildBenefitEntity(timestamp, condition, params))
+      map(params => this.buildBenefitEntity(timestamp, condition, params)),
     );
   }
 
@@ -233,7 +236,7 @@ export abstract class BnftTemplate {
    * @return 回傳效益參數
    */
   public abstract getBenefitParams(
-    condition: BenefitQueryModel
+    condition: BenefitQueryModel,
   ): Promise<Bnft.Param[]>;
 
   /**
@@ -246,27 +249,27 @@ export abstract class BnftTemplate {
    */
   public processBenefitParams(
     response: Observable<HttpResponse<ActivedSystemModel[]>>,
-    timestamp?: Date
+    timestamp?: Date,
   ): Observable<ProducePayloadModel<Bnft.BenefitSaving>> {
     return response.pipe(
       // 取出HTTP回應的資料
-      map((res) => res.data),
+      map(res => res.data),
       // 從系統資料中取出廠別資料
-      map((systems) => systems.map((system) => system.benefitPlant)),
+      map(systems => systems.map(system => system.benefitPlant)),
       // 將廠別資料重新建成Subject
-      map((plants) => from(plants)),
+      map(plants => from(plants)),
       // 將廠別打散成單筆數據
       concatAll(),
       // 保留需要計算及無異常的廠別
-      filter((plant) => this.filterPlant(plant)),
+      filter(plant => this.filterPlant(plant)),
       // 查詢效益參數
-      map((plant) => this.queryBenefit(plant as PlantModel, timestamp)),
+      map(plant => this.queryBenefit(plant as PlantModel, timestamp)),
       // 將效益參數打散成單筆數據
       concatAll(),
       // 打包成拋送的資料格式
-      map((benefit) => new ProducePayload(this.config.publishApi, benefit)),
+      map(benefit => new ProducePayload(this.config.publishApi, benefit)),
       // 發生錯誤給定預設值
-      catchError(() => this.getDefaultProcucePayload())
+      catchError(() => this.getDefaultProcucePayload()),
     );
   }
 
@@ -280,12 +283,12 @@ export abstract class BnftTemplate {
    */
   public execute(
     timestamp?: Date,
-    sendable = true
+    sendable = true,
   ): Observable<ProducePayloadModel<Bnft.BenefitSaving>> {
     const query = this.buildQueryActivatedSystemsFilter();
     const system$ = this.activedSystemService.find<ActivedSystemModel>(query);
     const param$ = this.processBenefitParams(system$, timestamp);
-    param$.subscribe((payload) => this.send(payload, sendable));
+    param$.subscribe(payload => this.send(payload, sendable));
     return param$;
   }
 
@@ -298,7 +301,7 @@ export abstract class BnftTemplate {
    */
   public async send(
     payload: ProducePayloadModel<Bnft.BenefitSaving>,
-    sendable = true
+    sendable = true,
   ): Promise<void> {
     if (sendable) {
       this.producer.publish(payload);
@@ -319,15 +322,15 @@ export abstract class BnftTemplate {
   public findLatestLaborCost(
     site: string,
     plantCode: string,
-    type: 'idl' | 'dl'
+    type: 'idl' | 'dl',
   ): Observable<BenefitLatestLaborCostResponse> {
     return this.benefitLaborCostService
       .getLatestCost(site, plantCode, type)
       .pipe(
         // 將工時資料取出
-        map((response) => response.data),
+        map(response => response.data),
         // 發生錯誤給定預設值
-        catchError(() => of(new LaborCost({ site, plant: plantCode, type })))
+        catchError(() => of(new LaborCost({ site, plant: plantCode, type }))),
       );
   }
 }

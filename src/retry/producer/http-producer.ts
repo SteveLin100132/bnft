@@ -9,6 +9,7 @@
  * @NOTE
  */
 
+import { Subject } from 'rxjs';
 import { ProducerAdapter, RetryOption } from 'wistroni40-retry/lib';
 import { HttpAdapter } from '../../http';
 import { Log4js } from './../../logger';
@@ -22,6 +23,10 @@ export class HttpProducer extends ProducerAdapter<HttpAdapter> {
    * 日誌
    */
   private readonly logger = new Log4js('system');
+  /**
+   * 送出數據完畢
+   */
+  public sendCompleted = new Subject<{ error: any; result: any }>();
 
   /**
    * @param http    HTTP請求
@@ -40,7 +45,7 @@ export class HttpProducer extends ProducerAdapter<HttpAdapter> {
    */
   public async send<T>(
     payload: ProducePayloadModel<T>,
-    callback: (error: any, result: any) => void
+    callback: (error: any, result: any) => void,
   ): Promise<void> {
     try {
       const result = await this.http
@@ -48,10 +53,12 @@ export class HttpProducer extends ProducerAdapter<HttpAdapter> {
         .toPromise();
       this.logger.trace('send payload successfully');
       this.logger.trace(JSON.stringify(payload));
+      this.sendCompleted.next({ error: null, result });
       callback(null, result);
     } catch (error) {
       this.logger.error('send payload failed');
       this.logger.error(error);
+      this.sendCompleted.next({ error, result: null });
       callback(error, null);
     }
   }

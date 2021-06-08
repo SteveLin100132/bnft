@@ -8,6 +8,7 @@
  * -----------------------------------------------------------------------------
  * @NOTE
  */
+import { Subject } from 'rxjs';
 import { ProducerAdapter, RetryOption } from 'wistroni40-retry/lib';
 import { HttpAdapter } from '../../http';
 import { ProducePayloadModel } from './models';
@@ -21,6 +22,13 @@ export declare class HttpProducer extends ProducerAdapter<HttpAdapter> {
      * 日誌
      */
     private readonly logger;
+    /**
+     * 送出數據完畢
+     */
+    sendCompleted: Subject<{
+        error: any;
+        result: any;
+    }>;
     /**
      * @param http    HTTP請求
      * @param options 重拋配置

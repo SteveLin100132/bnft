@@ -1,6 +1,6 @@
 {
   "name": "wistroni40-bnft",
-  "version": "1.0.8",
+  "version": "1.0.9",
   "description": "Benefit platform parameters publish job template",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -15,7 +15,7 @@
     "start": "npm run build:live",
     "start:file": "npm run build:file",
     "ts": "nodemon --exec ./node_modules/.bin/ts-node -- ",
-    "build:live": "nodemon --exec ./node_modules/.bin/ts-node -- ./src/index.ts",
+    "build:live": "nodemon --exec ./node_modules/.bin/ts-node -- ./examples/benefit.ts",
     "build:file": "nodemon --exec ./node_modules/.bin/ts-node --",
     "build": "tsc"
   },

@@ -29,7 +29,7 @@ class Benefit extends BnftTemplate {
   /**
    * 需要計算的廠別，若設為undefined則表示所有廠別都要計算
    */
-  protected enabledPlant = ['plantA', 'plantB'];
+  protected enabledPlant = ['plantA'];
 
   /**
    * @param config 效益設定檔
@@ -46,13 +46,13 @@ class Benefit extends BnftTemplate {
    * @return 回傳效益參數
    */
   public async getBenefitParams(
-    condition: BenefitQueryModel
+    condition: BenefitQueryModel,
   ): Promise<Bnft.Param[]> {
     const { site, plantCode } = condition;
     const idlCost = await this.findLatestLaborCost(
       site,
       plantCode,
-      'idl'
+      'idl',
     ).toPromise();
 
     const analysisParams: Bnft.Param = {
@@ -78,8 +78,8 @@ class Benefit extends BnftTemplate {
  */
 
 const configuration: BenefitConfigModel = {
-  systemId: 'mytest',
-  typeId: 'cost_idl',
+  systemId: 'system_id',
+  typeId: 'type_id',
   benefitType: 'direct',
   publishApi: 'http://publish-api-url/',
   benefitApi: 'http://benefit-api-url/',
@@ -95,7 +95,16 @@ const configuration: BenefitConfigModel = {
 const benefit = new Benefit(configuration);
 
 // 設定排程定時拋送
-benefit.setSchedule('*/10 * * * * *');
+benefit.setSchedule('0 0 0 * * ? *');
 
 // 直接拋送
 benefit.execute();
+
+// 監聽拋送結果
+benefit.sendCompleted.subscribe(res => {
+  if (res.error) {
+    // TODO
+  } else {
+    // TODO
+  }
+});

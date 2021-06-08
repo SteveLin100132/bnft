@@ -4,13 +4,19 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## 1.0.8 - 2021-03-16
+## [1.0.9] - 2021-06-08
+
+### Changed
+
+- 上拋效益後，可以監聽拋後結果是否成功
+
+## [1.0.8] - 2021-03-16
 
 ### Changed
 
 - 匯出
 
-## 1.0.7 - 2021-03-16
+## [1.0.7] - 2021-03-16
 
 ### Added
 
@@ -18,7 +24,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - 添加```enabledPlant```實作項目，來決定那些廠別是否要計算
 
-## 1.0.6 - 2021-02-24
+## [1.0.6] - 2021-02-24
 
 ### Changed
 
@@ -26,19 +32,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - ```execute```方法添加log模式，執行時僅印出上拋參數，不進行數據拋送
 
-## 1.0.5 - 2021-02-23
+## [1.0.5] - 2021-02-23
 
 ### Changed
 
 - 更改Package跟目錄路徑
 
-## 1.0.4 - 2021-02-22
+## [1.0.4] - 2021-02-22
 
 ### Changed
 
 - 匯出
 
-## 1.0.3 - 2021-02-22
+## [1.0.3] - 2021-02-22
 
 ### Added
 
@@ -46,7 +52,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Resend Benefit API
 
-## 1.0.2 - 2021-02-19
+## [1.0.2] - 2021-02-19
 
 ### Fixed
 
@@ -58,7 +64,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - 將```swagger-jsdoc```, ```swagger-ui-express```加到```package.json```
 
-## 1.0.1 - 2021-02-17
+## [1.0.1] - 2021-02-17
 
 ### Added
 
@@ -73,7 +79,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - 支援多種效益在同一Job下執行API
 
-## 1.0.0 - 2021-02-17
+## [1.0.0] - 2021-02-17
 
 ### Added
 
