@@ -12,7 +12,11 @@ import { BenefitConfigModel, BenefitType } from '../core';
 /**
  * 效益範本設定檔實體
  */
-export declare class BenefitConfigEntity implements BenefitConfigModel {
+export declare class BenefitConfigEntity<T = any> implements BenefitConfigModel<T> {
+    /**
+     * 開發模式
+     */
+    dev?: boolean;
     /**
      * 效益系統ID
      */
@@ -37,6 +41,10 @@ export declare class BenefitConfigEntity implements BenefitConfigModel {
      * 重拋嘗試次數
      */
     retry?: number;
+    /**
+     * 客製設定
+     */
+    custom?: T;
     /**
      * @param data 效益範本設定檔資料
      */

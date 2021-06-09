@@ -12,7 +12,11 @@ import { BenefitType } from './benefit.type';
 /**
  * 效益範本設定檔資料模型
  */
-export interface BenefitConfigModel {
+export interface BenefitConfigModel<T = any> {
+    /**
+     * 開發模式
+     */
+    dev?: boolean;
     /**
      * 效益系統ID
      */
@@ -37,4 +41,8 @@ export interface BenefitConfigModel {
      * 重拋嘗試次數
      */
     retry?: number;
+    /**
+     * 客製設定
+     */
+    custom?: T;
 }

@@ -278,17 +278,16 @@ export abstract class BnftTemplate {
    *
    * @method public
    * @param timestamp 查詢開始時間
-   * @param sendable  執行結果是否上拋
    * @return 回傳效益參數上拋資料
    */
   public execute(
     timestamp?: Date,
-    sendable = true,
   ): Observable<ProducePayloadModel<Bnft.BenefitSaving>> {
+    const dev = this.config.dev;
     const query = this.buildQueryActivatedSystemsFilter();
     const system$ = this.activedSystemService.find<ActivedSystemModel>(query);
     const param$ = this.processBenefitParams(system$, timestamp);
-    param$.subscribe(payload => this.send(payload, sendable));
+    param$.subscribe(payload => this.send(payload, !dev));
     return param$;
   }
 

@@ -16,6 +16,10 @@ import { BenefitType } from './benefit.type';
  */
 export interface BenefitConfigModel<T = any> {
   /**
+   * 開發模式
+   */
+  dev?: boolean;
+  /**
    * 效益系統ID
    */
   systemId: string;

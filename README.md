@@ -189,7 +189,6 @@ const config = {
 | Parameter |                              Type                               | Required |   Default   | Description          |
 | :-------- | :-------------------------------------------------------------: | :------: | :---------: | :------------------- |
 | timestamp |                              Date                               | Optional | `undefined` | 查詢開始時間         |
-| sendable  |                             boolean                             | Optional |    true     | 執行結果是否上拋     |
 | returns   | Observable&lt;ProducePayloadModel&lt;Bnft.BenefitSaving&gt;&gt; | Required | `undefined` | 回傳效益參數上拋資料 |
 
 #### send
@@ -226,6 +225,12 @@ const config = {
 **_Interface_**，效益範本設定檔資料模型
 
 ### Properties
+
+#### dev
+
+|  Type   | Required | Default | Description |
+| :-----: | :------: | :-----: | :---------- |
+| boolean | Optional | `false` | 開發模式    |
 
 #### systemId
 

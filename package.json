@@ -1,6 +1,6 @@
 {
   "name": "wistroni40-bnft",
-  "version": "1.1.0",
+  "version": "1.1.2",
   "description": "Benefit platform parameters publish job template",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",

@@ -148,10 +148,9 @@ export declare abstract class BnftTemplate {
      *
      * @method public
      * @param timestamp 查詢開始時間
-     * @param sendable  執行結果是否上拋
      * @return 回傳效益參數上拋資料
      */
-    execute(timestamp?: Date, sendable?: boolean): Observable<ProducePayloadModel<Bnft.BenefitSaving>>;
+    execute(timestamp?: Date): Observable<ProducePayloadModel<Bnft.BenefitSaving>>;
     /**
      * 將效益參數上拋
      *
