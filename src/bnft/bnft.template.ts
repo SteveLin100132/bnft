@@ -306,6 +306,7 @@ export abstract class BnftTemplate {
       this.producer.publish(payload);
     } else {
       this.console.debug(JSON.stringify(payload));
+      this.sendCompleted.next({ error: null, result: payload });
     }
   }
 
