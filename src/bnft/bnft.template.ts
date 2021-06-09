@@ -80,7 +80,10 @@ export abstract class BnftTemplate {
   /**
    * 送出數據完畢
    */
-  public sendCompleted: Subject<{ error: any; result: any }>;
+  public sendCompleted: Subject<{
+    error: any;
+    result: ProducePayloadModel<Bnft.BenefitSaving>;
+  }>;
 
   /**
    * @param config 效益設定檔

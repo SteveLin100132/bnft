@@ -27,7 +27,7 @@ export declare class HttpProducer extends ProducerAdapter<HttpAdapter> {
      */
     sendCompleted: Subject<{
         error: any;
-        result: any;
+        result: ProducePayloadModel<any>;
     }>;
     /**
      * @param http    HTTP請求

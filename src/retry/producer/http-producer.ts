@@ -26,7 +26,10 @@ export class HttpProducer extends ProducerAdapter<HttpAdapter> {
   /**
    * 送出數據完畢
    */
-  public sendCompleted = new Subject<{ error: any; result: any }>();
+  public sendCompleted = new Subject<{
+    error: any;
+    result: ProducePayloadModel<any>;
+  }>();
 
   /**
    * @param http    HTTP請求
@@ -53,12 +56,12 @@ export class HttpProducer extends ProducerAdapter<HttpAdapter> {
         .toPromise();
       this.logger.trace('send payload successfully');
       this.logger.trace(JSON.stringify(payload));
-      this.sendCompleted.next({ error: null, result });
+      this.sendCompleted.next({ error: null, result: payload });
       callback(null, result);
     } catch (error) {
       this.logger.error('send payload failed');
       this.logger.error(error);
-      this.sendCompleted.next({ error, result: null });
+      this.sendCompleted.next({ error, result: payload });
       callback(error, null);
     }
   }

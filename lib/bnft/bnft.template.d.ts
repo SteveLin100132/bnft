@@ -55,7 +55,7 @@ export declare abstract class BnftTemplate {
      */
     sendCompleted: Subject<{
         error: any;
-        result: any;
+        result: ProducePayloadModel<Bnft.BenefitSaving>;
     }>;
     /**
      * @param config 效益設定檔
