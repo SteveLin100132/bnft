@@ -42,6 +42,10 @@ export interface BenefitConfigModel<T = any> {
      */
     retry?: number;
     /**
+     * 重新拋送間隔時間
+     */
+    retryInterval?: number;
+    /**
      * 客製設定
      */
     custom?: T;

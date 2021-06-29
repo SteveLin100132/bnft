@@ -19,7 +19,7 @@ import { Log4js } from './../logger';
 import {
   HttpProducer,
   ProducePayloadEntity as ProducePayload,
-  ProducePayloadModel,
+  ProducePayloadModel
 } from './../retry';
 import { TimeManager } from './../utils';
 import {
@@ -29,7 +29,7 @@ import {
   BenefitActivedSystemService,
   BenefitLaborCostService,
   BenefitLatestLaborCostResponse,
-  BenefitPlantModel as PlantModel,
+  BenefitPlantModel as PlantModel
 } from './api';
 import { BenefitLatestLaborCostEntity as LaborCost } from './api/models';
 import { BenefitQueryConvertor } from './classes';
@@ -38,7 +38,7 @@ import {
   BenefitConfigModel,
   BenefitQueryModel,
   BenefitSavingEntity,
-  Bnft,
+  Bnft
 } from './models';
 
 /**
@@ -91,7 +91,10 @@ export abstract class BnftTemplate {
   constructor(public config: BenefitConfigModel) {
     this.config = new BenefitConfigEntity(this.config);
     ApiConfig.path = this.config.benefitApi;
-    this.producer = new HttpProducer(this.http, { count: this.config.retry });
+    this.producer = new HttpProducer(this.http, {
+      count: this.config.retry,
+      interval: this.config.retryInterval
+    });
     this.sendCompleted = this.producer.sendCompleted;
   }
 

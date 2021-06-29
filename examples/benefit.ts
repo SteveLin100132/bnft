@@ -13,7 +13,7 @@ import {
   BenefitConfigModel,
   BenefitQueryModel,
   Bnft,
-  BnftTemplate,
+  BnftTemplate
 } from '../src';
 
 /**
@@ -84,6 +84,7 @@ const configuration: BenefitConfigModel = {
   publishApi: 'http://publish-api-url/',
   benefitApi: 'http://benefit-api-url/',
   retry: 3,
+  retryInterval: 1000,
 };
 
 /**

@@ -44,6 +44,10 @@ export class BenefitConfigEntity<T = any> implements BenefitConfigModel<T> {
    */
   public retry?: number = 3;
   /**
+   * 重新拋送間隔時間
+   */
+  public retryInterval?: number = 1000 * 60 * 10;
+  /**
    * 客製設定
    */
   public custom?: T;
