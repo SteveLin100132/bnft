@@ -44,7 +44,7 @@ import {
 /**
  * 抽象效益計算範本
  */
-export abstract class BnftTemplate {
+export abstract class BnftTemplate<C = any> {
   /**
    * 日誌
    */
@@ -88,7 +88,7 @@ export abstract class BnftTemplate {
   /**
    * @param config 效益設定檔
    */
-  constructor(public config: BenefitConfigModel) {
+  constructor(public config: BenefitConfigModel<C>) {
     this.config = new BenefitConfigEntity(this.config);
     ApiConfig.path = this.config.benefitApi;
     this.producer = new HttpProducer(this.http, {

@@ -16,8 +16,8 @@ import { BenefitConfigModel, BenefitQueryModel, Bnft } from './models';
 /**
  * 抽象效益計算範本
  */
-export declare abstract class BnftTemplate {
-    config: BenefitConfigModel;
+export declare abstract class BnftTemplate<C = any> {
+    config: BenefitConfigModel<C>;
     /**
      * 日誌
      */
@@ -60,7 +60,7 @@ export declare abstract class BnftTemplate {
     /**
      * @param config 效益設定檔
      */
-    constructor(config: BenefitConfigModel);
+    constructor(config: BenefitConfigModel<C>);
     /**
      * 取得預設的效益參數資料
      *
