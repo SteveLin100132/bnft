@@ -13,8 +13,7 @@ import * as bodyParser from 'body-parser';
 import * as express from 'express';
 import * as fs from 'fs';
 import * as http from 'http';
-import { Bnft, BnftTemplate } from 'src/bnft';
-import { ProducePayloadModel } from 'src/retry';
+import { BnftTemplate } from 'src/bnft';
 import * as swaggerUi from 'swagger-ui-express';
 import { Log4js } from './../logger';
 import { SWAGGER_DOC } from './swagger';
@@ -56,7 +55,7 @@ export class Server {
    * @return 回傳效益計算Job清單
    */
   private getBenefitList(): BnftTemplate[] {
-    return Array.from(this.benefit).map((benefit) => benefit[1]);
+    return Array.from(this.benefit).map(benefit => benefit[1]);
   }
 
   /**
@@ -81,16 +80,16 @@ export class Server {
    */
   private async sendBenefit(
     req: express.Request,
-    res: express.Response
+    res: express.Response,
   ): Promise<void> {
     const timestamp = new Date(parseInt(req.query.timestamp as string, 10));
     timestamp.setDate(timestamp.getDate() + 1);
-    const result = await Promise.all(
-      this.getBenefitList().map((benefit) =>
-        benefit.execute(timestamp).toPromise()
-      )
+    await Promise.all(
+      this.getBenefitList().map(benefit =>
+        benefit.execute(timestamp).toPromise(),
+      ),
     );
-    res.send(result);
+    res.send(true);
   }
 
   /**
@@ -102,15 +101,15 @@ export class Server {
    */
   private async sendSpecificBenefit(
     req: express.Request,
-    res: express.Response
+    res: express.Response,
   ): Promise<void> {
     const key = this.getBenefitKey(req);
     const timestamp = new Date(parseInt(req.query.timestamp as string, 10));
     timestamp.setDate(timestamp.getDate() + 1);
     const benefit = this.benefit.get(key);
     if (benefit) {
-      const result = await benefit.execute(timestamp).toPromise();
-      res.send(result);
+      await benefit.execute(timestamp).toPromise();
+      res.send(true);
     } else {
       res.send(null);
     }
@@ -125,23 +124,21 @@ export class Server {
    */
   private async sendBenefitByTimeGroup(
     req: express.Request,
-    res: express.Response
+    res: express.Response,
   ): Promise<void> {
     if (Array.isArray(req.body) && req.body.length > 0) {
-      const resultList: ProducePayloadModel<Bnft.BenefitSaving>[] = [];
       await Promise.all(
-        req.body.map(async (date) => {
+        req.body.map(async date => {
           const timestamp = new Date(parseInt(date, 10));
           timestamp.setDate(timestamp.getDate() + 1);
-          const result = await Promise.all(
-            this.getBenefitList().map((benefit) =>
-              benefit.execute(timestamp).toPromise()
-            )
+          await Promise.all(
+            this.getBenefitList().map(benefit =>
+              benefit.execute(timestamp).toPromise(),
+            ),
           );
-          resultList.push(...result);
-        })
+        }),
       );
-      res.send(resultList);
+      res.send(true);
     } else {
       res.send('body format error');
     }
@@ -156,23 +153,21 @@ export class Server {
    */
   public async sendSpecificBenefitByTimeGroup(
     req: express.Request,
-    res: express.Response
+    res: express.Response,
   ): Promise<void> {
     if (Array.isArray(req.body) && req.body.length > 0) {
       const key = this.getBenefitKey(req);
-      const resultList: ProducePayloadModel<Bnft.BenefitSaving>[] = [];
       await Promise.all(
-        req.body.map(async (date) => {
+        req.body.map(async date => {
           const timestamp = new Date(parseInt(date, 10));
           timestamp.setDate(timestamp.getDate() + 1);
           const benefit = await this.benefit.get(key);
           if (benefit) {
-            const result = await benefit.execute(timestamp).toPromise();
-            resultList.push(result);
+            await benefit.execute(timestamp).toPromise();
           }
-        })
+        }),
       );
-      res.send(resultList);
+      res.send(true);
     } else {
       res.send('body format error');
     }
@@ -187,11 +182,11 @@ export class Server {
    */
   private async sendBackupBenefit(
     req: express.Request,
-    res: express.Response
+    res: express.Response,
   ): Promise<void> {
     const files = fs.readdirSync('backup');
-    const result = await Promise.all(
-      files.map((file) => {
+    await Promise.all(
+      files.map(file => {
         const benefit = fs.readFileSync(`backup/${file}`, { encoding: 'utf8' });
         try {
           if (this.getBenefitList().length > 0) {
@@ -203,9 +198,9 @@ export class Server {
           this.logger.warn(benefit);
         }
         return JSON.parse(benefit);
-      })
+      }),
     );
-    res.send(result);
+    res.send(true);
   }
 
   /**
@@ -220,15 +215,15 @@ export class Server {
     this.server.post('/benefit/send', this.sendBenefit.bind(this));
     this.server.post(
       '/specific/benefit/send',
-      this.sendSpecificBenefit.bind(this)
+      this.sendSpecificBenefit.bind(this),
     );
     this.server.post(
       '/benefit/send/timestamps',
-      this.sendBenefitByTimeGroup.bind(this)
+      this.sendBenefitByTimeGroup.bind(this),
     );
     this.server.post(
       '/specific/benefit/send/timestamps',
-      this.sendSpecificBenefitByTimeGroup.bind(this)
+      this.sendSpecificBenefitByTimeGroup.bind(this),
     );
     this.server.post('/benefit/backup', this.sendBackupBenefit.bind(this));
     this.server.use('/', swaggerUi.serve, swaggerUi.setup(SWAGGER_DOC));

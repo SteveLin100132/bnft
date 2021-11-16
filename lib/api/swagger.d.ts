@@ -40,7 +40,6 @@ export declare const SWAGGER_DOC: {
                             'application/json': {
                                 schema: {
                                     type: string;
-                                    $ref: string;
                                 };
                             };
                         };
@@ -73,7 +72,6 @@ export declare const SWAGGER_DOC: {
                             'application/json': {
                                 schema: {
                                     type: string;
-                                    $ref: string;
                                 };
                             };
                         };
@@ -112,7 +110,6 @@ export declare const SWAGGER_DOC: {
                             'application/json': {
                                 schema: {
                                     type: string;
-                                    $ref: string;
                                 };
                             };
                         };
@@ -158,7 +155,6 @@ export declare const SWAGGER_DOC: {
                             'application/json': {
                                 schema: {
                                     type: string;
-                                    $ref: string;
                                 };
                             };
                         };
@@ -185,7 +181,6 @@ export declare const SWAGGER_DOC: {
                             'application/json': {
                                 schema: {
                                     type: string;
-                                    $ref: string;
                                 };
                             };
                         };

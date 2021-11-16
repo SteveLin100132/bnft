@@ -19,7 +19,7 @@ import { Log4js } from './../logger';
 import {
   HttpProducer,
   ProducePayloadEntity as ProducePayload,
-  ProducePayloadModel
+  ProducePayloadModel,
 } from './../retry';
 import { TimeManager } from './../utils';
 import {
@@ -29,7 +29,7 @@ import {
   BenefitActivedSystemService,
   BenefitLaborCostService,
   BenefitLatestLaborCostResponse,
-  BenefitPlantModel as PlantModel
+  BenefitPlantModel as PlantModel,
 } from './api';
 import { BenefitLatestLaborCostEntity as LaborCost } from './api/models';
 import { BenefitQueryConvertor } from './classes';
@@ -38,8 +38,16 @@ import {
   BenefitConfigModel,
   BenefitQueryModel,
   BenefitSavingEntity,
-  Bnft
+  Bnft,
 } from './models';
+
+/**
+ * 效益上拋回傳結果
+ */
+export type BenefitResponse = {
+  error: any;
+  result: ProducePayloadModel<Bnft.BenefitSaving>;
+};
 
 /**
  * 抽象效益計算範本
@@ -80,10 +88,7 @@ export abstract class BnftTemplate<C = any> {
   /**
    * 送出數據完畢
    */
-  public sendCompleted: Subject<{
-    error: any;
-    result: ProducePayloadModel<Bnft.BenefitSaving>;
-  }>;
+  public sendCompleted: Subject<BenefitResponse>;
 
   /**
    * @param config 效益設定檔
@@ -93,7 +98,7 @@ export abstract class BnftTemplate<C = any> {
     ApiConfig.path = this.config.benefitApi;
     this.producer = new HttpProducer(this.http, {
       count: this.config.retry,
-      interval: this.config.retryInterval
+      interval: this.config.retryInterval,
     });
     this.sendCompleted = this.producer.sendCompleted;
   }
@@ -193,12 +198,12 @@ export abstract class BnftTemplate<C = any> {
    * @param cron 排程
    * @return 回傳物件本身
    */
-  public setSchedule(cron: string): BnftTemplate {
+  public setSchedule(cron: string): Observable<BenefitResponse> {
     this.cron = cron;
     if (this.cron) {
       schedule.scheduleJob(this.cron, this.execute.bind(this));
     }
-    return this;
+    return this.sendCompleted;
   }
 
   /**
@@ -284,17 +289,15 @@ export abstract class BnftTemplate<C = any> {
    *
    * @method public
    * @param timestamp 查詢開始時間
-   * @return 回傳效益參數上拋資料
+   * @return 回傳效益參數上拋結果
    */
-  public execute(
-    timestamp?: Date,
-  ): Observable<ProducePayloadModel<Bnft.BenefitSaving>> {
+  public execute(timestamp?: Date): Observable<BenefitResponse> {
     const dev = this.config.dev;
     const query = this.buildQueryActivatedSystemsFilter();
     const system$ = this.activedSystemService.find<ActivedSystemModel>(query);
     const param$ = this.processBenefitParams(system$, timestamp);
     param$.subscribe(payload => this.send(payload, !dev));
-    return param$;
+    return this.sendCompleted;
   }
 
   /**

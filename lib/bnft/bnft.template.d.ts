@@ -14,6 +14,13 @@ import { HttpProducer, ProducePayloadModel } from './../retry';
 import { BaseModel as ApiBaseModel, BenefitActivedSystemModel as ActivedSystemModel, BenefitActivedSystemService, BenefitLaborCostService, BenefitLatestLaborCostResponse, BenefitPlantModel as PlantModel } from './api';
 import { BenefitConfigModel, BenefitQueryModel, Bnft } from './models';
 /**
+ * 效益上拋回傳結果
+ */
+export declare type BenefitResponse = {
+    error: any;
+    result: ProducePayloadModel<Bnft.BenefitSaving>;
+};
+/**
  * 抽象效益計算範本
  */
 export declare abstract class BnftTemplate<C = any> {
@@ -53,10 +60,7 @@ export declare abstract class BnftTemplate<C = any> {
     /**
      * 送出數據完畢
      */
-    sendCompleted: Subject<{
-        error: any;
-        result: ProducePayloadModel<Bnft.BenefitSaving>;
-    }>;
+    sendCompleted: Subject<BenefitResponse>;
     /**
      * @param config 效益設定檔
      */
@@ -108,7 +112,7 @@ export declare abstract class BnftTemplate<C = any> {
      * @param cron 排程
      * @return 回傳物件本身
      */
-    setSchedule(cron: string): BnftTemplate;
+    setSchedule(cron: string): Observable<BenefitResponse>;
     /**
      * 過濾無須或異常的廠別
      *
@@ -148,9 +152,9 @@ export declare abstract class BnftTemplate<C = any> {
      *
      * @method public
      * @param timestamp 查詢開始時間
-     * @return 回傳效益參數上拋資料
+     * @return 回傳效益參數上拋結果
      */
-    execute(timestamp?: Date): Observable<ProducePayloadModel<Bnft.BenefitSaving>>;
+    execute(timestamp?: Date): Observable<BenefitResponse>;
     /**
      * 將效益參數上拋
      *
